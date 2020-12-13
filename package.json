@@ -1,0 +1,41 @@
+{
+  "name": "js-dev-api-v1",
+  "version": "1.0.0",
+  "description": "REST API for JS Dev Environment",
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidcwasson/js-dev-api-v1.git"
+  },
+  "author": "David Wasson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidcwasson/js-dev-api-v1/issues"
+  },
+  "homepage": "https://github.com/davidcwasson/js-dev-api-v1#readme",
+  "dependencies": {
+    "express": "4.17.1",
+    "nodemon": "2.0.6"
+  },
+  "devDependencies": {
+    "eslint": "7.15.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 4000
+    }
+  }
+}
