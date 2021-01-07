@@ -1,5 +1,1 @@
-[
-  { "id": 1, "name": "Catcher in the Rye" },
-  { "id": 2, "name": "Dune" },
-  { "id": 3, "name": "Hound of the Baskervilles" }
-]
+[{"id":1,"name":"Catcher in the Rye","genre":"Classics"},{"id":2,"name":"Dune Messiah","genre":"Science Fiction"},{"id":3,"name":"Hound of the Baskervilles","genre":"Suspense"}]

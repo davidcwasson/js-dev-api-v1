@@ -24,6 +24,47 @@ let bookRepo = {
       }
     });
   },
+  delete: function (id, resolve, reject) {
+    fs.readFile(FILE_NAME, function (err, data) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        let books = JSON.parse(data);
+        let index = books.findIndex(p => p.id == id);
+        if (index != -1) {
+          books.splice(index, 1);
+          fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(index);
+            }
+          })
+        }
+      }
+    });
+  },
+  insert: function (newData, resolve, reject) {
+    fs.readFile(FILE_NAME, function (err, data) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        let books = JSON.parse(data);
+        books.push(newData);
+        fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+          if (err) {
+            reject(err);
+          }
+          else {
+            resolve(newData);
+          }
+        });
+      }
+    });
+  },
   search: function (searchObject, resolve, reject) {
     fs.readFile(FILE_NAME, function (err, data) {
       if (err) {
@@ -44,6 +85,28 @@ let bookRepo = {
         }
 
         resolve(books);
+      }
+    });
+  },
+  update: function (newData, id, resolve, reject) {
+    fs.readFile(FILE_NAME, function (err, data) {
+      if (err) {
+        reject(err);
+      }
+      else {
+        let books = JSON.parse(data);
+        let book = books.find(p => p.id == id);
+        if (book) {
+          Object.assign(book, newData);
+          fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(newData);
+            }
+          });
+        }
       }
     });
   }

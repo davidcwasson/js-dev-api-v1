@@ -8,12 +8,19 @@ const port = process.env.PORT || 3000;
 // Use the express Router object
 const router = express.Router();
 
+// Configure middleware to support JSON data parsing in request object
+app.use(express.json());
+app.use(express.urlencoded()); //Parse URL-encoded bodies
+
 // Book data stored via files
 const bookRepo = require('./repos/bookRepo.js');
 
 // Local MongoDB BooksAPI collection
 const db = mongoose.connect('mongodb://localhost/bookAPI');
 const Book = require('./models/bookModel');
+const bookRouter = require('./routes/bookRouter')(Book);
+
+app.use('/api/', bookRouter);
 
 // Create GET to return a list of books
 router.get('/', (req, res, next) => {
@@ -29,35 +36,18 @@ router.get('/', (req, res, next) => {
   });
 });
 
-// *** MongoDB ***
-// Route to /books
-// Can filter books by query string
-router.route('/books')
-  // GET /books
-  .get((req, res) => {
-    const query = {};
-    if (req.query.genre) {
-      query.genre = req.query.genre;
-    }
-    Book.find(query, (err, books) => {
-      if (err) {
-        return res.send(err);
-      }
-      return res.json(books);
+router.post('/', function (req, res, next) {
+  bookRepo.insert(req.body, function(data) {
+    res.status(201).json({
+      "status": 201,
+      "statusText": "Created",
+      "message": "New Book Added.",
+      "data": data
     });
+  }, function (err) {
+    next(err);
   });
-
-// *** MongoDB ***
-// Route to a single book
-router.route('/books/:bookId')
-  .get((req, res) => {
-    Book.findById(req.params.bookId, (err, book) => {
-      if (err) {
-        return res.send(err);
-      }
-      return res.json(book);
-    });
-  });
+});
 
 // Create GET/search?id=n&name=str to search for books by 'id' and/or 'name'
 router.get('/search', function (req, res, next) {
@@ -87,6 +77,93 @@ router.get('/:id', function (req, res, next) {
         "statusText": "OK",
         "message": "Single book retrieved.",
         "data": data
+      });
+    }
+    else {
+      res.status(404).json({
+        "status": 404,
+        "statusText": "Not Found",
+        "message": "The book '" + req.params.id + "' could not be found.",
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "The book '" + req.params.id + "' could not be found."
+        }
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+})
+
+router.put('/:id', function (req, res, next) {
+  bookRepo.getById(req.params.id, function (data) {
+    if (data) {
+      // Attempt to update the data
+      bookRepo.update(req.body, req.params.id, function (data) {
+        res.status(200).json({
+          "status": 200,
+          "statusText": "OK",
+          "message": "Book '" + req.params.id + "' updated.",
+          "data": data
+        });
+      });
+    }
+    else {
+      res.status(404).json({
+        "status": 404,
+        "statusText": "Not Found",
+        "message": "The book '" + req.params.id + "' could not be found.",
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "The book '" + req.params.id + "' could not be found."
+        }
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+});
+
+router.patch('/:id', function (req, res, next) {
+  bookRepo.getById(req.params.id, function (data) {
+    if (data) {
+      // Attempt to update the data
+      bookRepo.update(req.body, req.params.id, function (data) {
+        res.status(200).json({
+          "status": 200,
+          "statusText": "OK",
+          "message": "Book '" + req.params.id + "' patched.",
+          "data": data
+        });
+      });
+    }
+    else {
+      res.status(404).json({
+        "status": 404,
+        "statusText": "Not Found",
+        "message": "The book '" + req.params.id + "' could not be found.",
+        "error": {
+          "code": "NOT_FOUND",
+          "message": "The book '" + req.params.id + "' could not be found."
+        }
+      });
+    }
+  }, function(err) {
+    next(err);
+  });
+});
+
+router.delete('/:id', function (req, res, next) {
+  bookRepo.getById(req.params.id, function (data) {
+    if (data) {
+      // Attempt to delete the data
+      bookRepo.delete(req.params.id, function (data) {
+        res.status(200).json({
+          "status": 200,
+          "statusText": "OK",
+          "message": "The book '" + req.params.id + "' is deleted.",
+          "data": "Book '" + req.params.id + "' deleted."
+        });
       });
     }
     else {
