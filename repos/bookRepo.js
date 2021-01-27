@@ -1,76 +1,71 @@
-let fs = require('fs');
+const fs = require('fs');
 
-const FILE_NAME = './assets/books.json';
+const FILE_NAME = './assets/books2.json';
 
-let bookRepo = {
-  get: function (resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+const bookRepo = {
+  get(resolve, reject) {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
+      } else {
         resolve(JSON.parse(data));
       }
     });
   },
-  getById: function (id, resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+  getById(id, resolve, reject) {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
-        let book = JSON.parse(data).find(p => p.id == id);
+      } else {
+        // eslint-disable-next-line eqeqeq
+        const book = JSON.parse(data).find((p) => p.id == id); // === does not work
         resolve(book);
       }
     });
   },
-  delete: function (id, resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+  delete(id, resolve, reject) {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
-        let books = JSON.parse(data);
-        let index = books.findIndex(p => p.id == id);
-        if (index != -1) {
+      } else {
+        const books = JSON.parse(data);
+        // eslint-disable-next-line eqeqeq
+        const index = books.findIndex((p) => p.id == id); // === does not work
+        if (index !== -1) {
           books.splice(index, 1);
-          fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+          fs.writeFile(FILE_NAME, JSON.stringify(books), (err) => {
             if (err) {
               reject(err);
-            }
-            else {
+            } else {
               resolve(index);
             }
-          })
+          });
         }
       }
     });
   },
-  insert: function (newData, resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+  insert(newData, resolve, reject) {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
-        let books = JSON.parse(data);
+      } else {
+        const books = JSON.parse(data);
         books.push(newData);
-        fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+        fs.writeFile(FILE_NAME, JSON.stringify(books), (err) => {
           if (err) {
             reject(err);
-          }
-          else {
+          } else {
             resolve(newData);
           }
         });
       }
     });
   },
-  search: function (searchObject, resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+  search: (searchObject, resolve, reject) => {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
+      } else {
         let books = JSON.parse(data);
         // Perform search
         if (searchObject) {
@@ -80,29 +75,31 @@ let bookRepo = {
           //   "name": 'A'
           // };
           books = books.filter(
-            b => (searchObject.id ? b.id == searchObject.id : true) &&
-              (searchObject.name ? b.name.toLowerCase().indexOf(searchObject.name.toLowerCase()) >= 0 : true));
+            // eslint-disable-next-line eqeqeq
+            (b) => (searchObject.id ? b.id == searchObject.id : true) // === does not work
+              && (searchObject.name
+                ? b.name.toLowerCase().indexOf(searchObject.name.toLowerCase()) >= 0 : true)
+          );
         }
 
         resolve(books);
       }
     });
   },
-  update: function (newData, id, resolve, reject) {
-    fs.readFile(FILE_NAME, function (err, data) {
+  update: (newData, id, resolve, reject) => {
+    fs.readFile(FILE_NAME, (err, data) => {
       if (err) {
         reject(err);
-      }
-      else {
-        let books = JSON.parse(data);
-        let book = books.find(p => p.id == id);
+      } else {
+        const books = JSON.parse(data);
+        // eslint-disable-next-line eqeqeq
+        const book = books.find((p) => p.id == id); // === does not work
         if (book) {
           Object.assign(book, newData);
-          fs.writeFile(FILE_NAME, JSON.stringify(books), function (err) {
+          fs.writeFile(FILE_NAME, JSON.stringify(books), (err) => {
             if (err) {
               reject(err);
-            }
-            else {
+            } else {
               resolve(newData);
             }
           });
