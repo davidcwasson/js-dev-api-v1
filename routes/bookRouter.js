@@ -29,7 +29,14 @@ function routes(Book) {
   // Route to a single book
   bookRouter.route('/books/:bookId')
     // GET single book
-    .get((req, res) => res.json(req.book))
+    .get((req, res) => {
+      const returnBook = req.book.toJSON();
+
+      returnBook.links = {};
+      const genre = req.book.genre.replace(' ', '%20');
+      returnBook.links.FilterByThisGenre = `http://${req.headers.host}/api/books/?genre=${genre}`;
+      res.json(returnBook);
+    })
     // PUT updates a book
     .put((req, res) => {
       const { book } = req;
