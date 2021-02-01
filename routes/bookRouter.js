@@ -1,33 +1,17 @@
 /* eslint-disable no-param-reassign */
 
 const express = require('express');
+const booksController = require('../controllers/booksController.js');
 
 function routes(Book) {
   const bookRouter = express.Router();
+  const controller = booksController(Book);
   // *** MongoDB ***
   // Route to /books
   // Can filter books by query string
   bookRouter.route('/books')
-    // GET /books
-    .get((req, res) => {
-      const query = {};
-      if (req.query.genre) {
-        query.genre = req.query.genre;
-      }
-      Book.find(query, (err, books) => {
-        if (err) {
-          return res.send(err);
-        }
-        return res.json(books);
-      });
-    })
-    // POST /books
-    .post((req, res) => {
-      const book = new Book(req.body);
-
-      book.save();
-      return res.status(201).json(book);
-    });
+    .post(controller.post)
+    .get(controller.get);
 
   // *** MongoDB ***
   bookRouter.use('/books/:bookId', (req, res, next) => {

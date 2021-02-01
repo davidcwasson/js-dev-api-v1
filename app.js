@@ -18,7 +18,13 @@ const bookRepo = require('./repos/bookRepo.js');
 const errorHelper = require('./helpers/errorHelpers');
 
 // Local MongoDB BooksAPI collection
-const db = mongoose.connect('mongodb://localhost/bookAPI');
+if (process.env.ENV === 'Test') {
+  console.log('This is a test');
+  const db = mongoose.connect('mongodb://localhost/bookAPI_Test');
+} else {
+  console.log('This is for real');
+  const db = mongoose.connect('mongodb://localhost/bookAPI');
+}
 const Book = require('./models/bookModel');
 const bookRouter = require('./routes/bookRouter')(Book);
 
@@ -193,6 +199,8 @@ app.use(errorHelper.clientErrorHandler);
 app.use(errorHelper.errorHandler);
 
 // Create server to listen to port provided
-app.listen(port, () => {
+app.server = app.listen(port, () => {
   console.log(`Node server is running on http://localhost:' ${port}`);
 });
+
+module.exports = app;
