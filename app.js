@@ -1,9 +1,13 @@
 // Bring in the express server and create application
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Configure CORS
+app.use(cors());
 
 // Use the express Router object
 const router = express.Router();

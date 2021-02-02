@@ -1,0 +1,51 @@
+<html>
+    <body>
+        Serving up HTML
+
+        <h1>
+          Welcome to <%=title%>
+        </h1>
+
+        <ul>
+          <%for(var i=0; i<list.length; i++){%>
+            <li><%= list[i] %></li>
+          <%}%>
+        </ul>
+
+        <h1>Book Sample</h1>
+
+        <p>Book 1: <%= data[0].name %> - genre <%= data[0].genre %>
+
+        <p>Books:</p>
+        <ul>
+          <% for (var i = 0; i < data.length; i++) { %>
+            <li><%- data[i].name %></li>
+          <% } %>
+        </ul>
+
+        <button onclick="getAllBooks();">Get All Books</button>
+
+        <script>
+          'use strict';
+
+          const URL = "http://localhost:4000/api/";
+
+          function getAllBooks() {
+            console.log("GET ALL");
+
+            let req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+              if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                let response = JSON.parse(this.response);
+                console.log(response.status);
+                console.log(response.statusText);
+                console.log(response.data);
+              }
+            };
+            req.open("GET", URL);
+            req.send();
+          }
+        </script>
+
+    </body>
+</html>

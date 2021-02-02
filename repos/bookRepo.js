@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const FILE_NAME = './assets/books2.json';
+const FILE_NAME = './assets/books.json';
 
 const bookRepo = {
   get(resolve, reject) {
